@@ -9,7 +9,7 @@ if (!Function.prototype.bind) {
             throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
         }
 
-        var aArgs   = Array.prototype.slice.call(arguments, 1),
+        let aArgs   = Array.prototype.slice.call(arguments, 1),
             fToBind = this,
             fNOP    = function() {},
             fBound  = function() {
@@ -57,7 +57,7 @@ if (!Function.prototype.bind) {
         this.pcDelay = 800;
 
         this._hitsForWin = 0;
-        for(var i=0;i<this.shipsConfiguration.length;i++){
+        for(let i=0;i<this.shipsConfiguration.length;i++){
             this._hitsForWin = +this._hitsForWin + (this.shipsConfiguration[i].maxShips*this.shipsConfiguration[i].pointCount);
         }
 
@@ -95,11 +95,11 @@ if (!Function.prototype.bind) {
             this.gameArea.appendChild(this.toolbar);
         },
         createGameFields: function(){
-            var pcGameArea = document.createElement('div');
+            let pcGameArea = document.createElement('div');
             pcGameArea.setAttribute('class', 'pcGameArea');
             this.gameArea.appendChild(pcGameArea);
 
-            var userGameArea = document.createElement('div');
+            let userGameArea = document.createElement('div');
             userGameArea.setAttribute('class', 'userGameArea');
             this.gameArea.appendChild(userGameArea);
 
@@ -117,7 +117,7 @@ if (!Function.prototype.bind) {
             userGameArea.appendChild(this.userGameField);
         },
         createFooter: function(){
-            var footer = document.createElement('div');
+            let footer = document.createElement('div');
             footer.setAttribute('class', 'footer');
 
             this.startGameButton = document.createElement('button');
@@ -139,7 +139,7 @@ if (!Function.prototype.bind) {
                 return;
             }
 
-            this.startGameButton.innerHTML = 'Начать заново...';
+            this.startGameButton.innerHTML = 'Restart';
             this.pcInfo.innerHTML = this.pcName + ' (ваш противник)';
             this.userInfo.innerHTML = this.userName + ' (ваше поле)';
 
@@ -160,9 +160,9 @@ if (!Function.prototype.bind) {
          * Создание/обновление ячеей в игровых полях
          */
         drawGamePoints: function(){
-            for(var yPoint=0;yPoint<this.gameFieldBorderY.length; yPoint++){
-                for(var xPoint=0;xPoint<this.gameFieldBorderX.length; xPoint++){
-                    var pcPointBlock = this.getOrCreatePointBlock(yPoint, xPoint);
+            for(let yPoint=0;yPoint<this.gameFieldBorderY.length; yPoint++){
+                for(let xPoint=0;xPoint<this.gameFieldBorderX.length; xPoint++){
+                    let pcPointBlock = this.getOrCreatePointBlock(yPoint, xPoint);
                     pcPointBlock.onclick = function(e){
                         this.userFire(e);
                     }.bind(this);
@@ -171,7 +171,7 @@ if (!Function.prototype.bind) {
                         pcPointBlock.setAttribute('class', 'ship');
                     }*/
 
-                    var userPointBlock = this.getOrCreatePointBlock(yPoint, xPoint, 'user');
+                    let userPointBlock = this.getOrCreatePointBlock(yPoint, xPoint, 'user');
                     if(this._userShipsMap[yPoint][xPoint] === this.CELL_WITH_SHIP){
                         userPointBlock.setAttribute('class', 'ship');
                     }
@@ -190,8 +190,8 @@ if (!Function.prototype.bind) {
          * @return {type}
          */
         getOrCreatePointBlock: function(yPoint, xPoint, type){
-            var id = this.getPointBlockIdByCoords(yPoint, xPoint, type);
-            var block = document.getElementById(id);
+            let id = this.getPointBlockIdByCoords(yPoint, xPoint, type);
+            let block = document.getElementById(id);
             if(block){
                 block.innerHTML = '';
                 block.setAttribute('class', '');
@@ -237,9 +237,9 @@ if (!Function.prototype.bind) {
          * @return {Array|SeeBattle.prototype.generateShotMap.map}
          */
         generateShotMap: function(){
-            var map = [];
-            for(var yPoint=0;yPoint<this.gameFieldBorderY.length; yPoint++){
-                for(var xPoint=0;xPoint<this.gameFieldBorderX.length; xPoint++){
+            let map = [];
+            for(let yPoint=0;yPoint<this.gameFieldBorderY.length; yPoint++){
+                for(let xPoint=0;xPoint<this.gameFieldBorderX.length; xPoint++){
                     map.push({y: yPoint, x: xPoint});
                 }
             }
@@ -251,11 +251,11 @@ if (!Function.prototype.bind) {
          * @return {Array}
          */
         generateRandomShipMap: function(){
-            var map = [];
+            let map = [];
             // генерация карты расположения, вклчающей отрицательный координаты
             // для возможности размещения у границ
-            for(var yPoint=-1;yPoint<(this.gameFieldBorderY.length+1); yPoint++){
-                for(var xPoint=-1;xPoint<(this.gameFieldBorderX.length+1); xPoint++){
+            for(let yPoint=-1;yPoint<(this.gameFieldBorderY.length+1); yPoint++){
+                for(let xPoint=-1;xPoint<(this.gameFieldBorderX.length+1); xPoint++){
                     if(!map[yPoint]){
                         map[yPoint] = [];
                     }
@@ -264,18 +264,18 @@ if (!Function.prototype.bind) {
             }
 
             // получение копии настроек кораблей для дальнейших манипуляций
-            var shipsConfiguration = JSON.parse(JSON.stringify(this.shipsConfiguration));
-            var allShipsPlaced = false;
+            let shipsConfiguration = JSON.parse(JSON.stringify(this.shipsConfiguration));
+            let allShipsPlaced = false;
             while(allShipsPlaced === false){
-                var xPoint = this.getRandomInt(0, this.gameFieldBorderX.length);
-                var yPoint = this.getRandomInt(0, this.gameFieldBorderY.length);
+                let xPoint = this.getRandomInt(0, this.gameFieldBorderX.length);
+                let yPoint = this.getRandomInt(0, this.gameFieldBorderY.length);
                 if(this.isPointFree(map, xPoint, yPoint) === true){
                     if(this.canPutHorizontal(map, xPoint, yPoint, shipsConfiguration[0].pointCount, this.gameFieldBorderX.length)){
-                        for(var i=0;i<shipsConfiguration[0].pointCount;i++){
+                        for(let i=0;i<shipsConfiguration[0].pointCount;i++){
                             map[yPoint][xPoint + i] = this.CELL_WITH_SHIP;
                         }
                     }else if(this.canPutVertical(map, xPoint, yPoint, shipsConfiguration[0].pointCount, this.gameFieldBorderY.length)){
-                        for(var i=0;i<shipsConfiguration[0].pointCount;i++){
+                        for(let i=0;i<shipsConfiguration[0].pointCount;i++){
                             map[yPoint + i][xPoint] = this.CELL_WITH_SHIP;
                         }
                     }else{
@@ -333,8 +333,8 @@ if (!Function.prototype.bind) {
          * @return {Boolean}
          */
         canPutHorizontal: function(map, xPoint, yPoint, shipLength, coordLength){
-            var freePoints = 0;
-            for(var x=xPoint;x<coordLength;x++){
+            let freePoints = 0;
+            for(let x=xPoint;x<coordLength;x++){
                 // текущая и далее по часовй стрелке в гориз направл
                 if(map[yPoint][x] === this.CELL_EMPTY
                     && map[yPoint-1][x] === this.CELL_EMPTY
@@ -362,8 +362,8 @@ if (!Function.prototype.bind) {
          * @return {Boolean}
          */
         canPutVertical: function(map, xPoint, yPoint, shipLength, coordLength){
-            var freePoints = 0;
-            for(var y=yPoint;y<coordLength;y++){
+            let freePoints = 0;
+            for(let y=yPoint;y<coordLength;y++){
                 // текущая и далее по часовй стрелке в вертикальном направлении
                 if(map[y][xPoint] === this.CELL_EMPTY
                     && map[y+1][xPoint] === this.CELL_EMPTY
@@ -388,10 +388,10 @@ if (!Function.prototype.bind) {
             if(this.isGameStopped() || this.isPCGoing()){
                 return;
             }
-            var e = event || window.event;
-            var firedEl = e.target || e.srcElement;
-            var x = firedEl.getAttribute('data-x');
-            var y = firedEl.getAttribute('data-y');
+            let e = event || window.event;
+            let firedEl = e.target || e.srcElement;
+            let x = firedEl.getAttribute('data-x');
+            let y = firedEl.getAttribute('data-y');
             if(this._pcShipsMap[y][x] === this.CELL_EMPTY){
                 firedEl.innerHTML = this.getFireFailTemplate();
                 this.prepareToPcFire();
@@ -432,12 +432,12 @@ if (!Function.prototype.bind) {
                 return;
             }
             // берется случайный выстрел из сгенерированной ранее карты
-            var randomShotIndex = this.getRandomInt(0, this._pcShotMap.length);
-            var randomShot = JSON.parse(JSON.stringify(this._pcShotMap[randomShotIndex]));
+            let randomShotIndex = this.getRandomInt(0, this._pcShotMap.length);
+            let randomShot = JSON.parse(JSON.stringify(this._pcShotMap[randomShotIndex]));
             // удаление чтобы не было выстрелов повторных
             this._pcShotMap.splice(randomShotIndex, 1);
 
-            var firedEl = document.getElementById(this.getPointBlockIdByCoords(randomShot.y, randomShot.x, 'user'));
+            let firedEl = document.getElementById(this.getPointBlockIdByCoords(randomShot.y, randomShot.x, 'user'));
             if(this._userShipsMap[randomShot.y][randomShot.x] === this.CELL_EMPTY){
                 firedEl.innerHTML = this.getFireFailTemplate();
             }else{
@@ -476,7 +476,7 @@ if (!Function.prototype.bind) {
          * Отображение текущей игровой ситуации в блоке
          */
         updateToolbar: function(){
-            this.toolbar.innerHTML = 'Счет - ' + this._pcHits + ':' + this._userHits;
+            this.toolbar.innerHTML = 'Количество вырезаных людей - ' + this._pcHits + ':' + this._userHits;
             if(this.isGameStopped()){
                 if(this._userHits >= this._hitsForWin){
                     this.toolbar.innerHTML += ', вы победили';
